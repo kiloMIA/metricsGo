@@ -5,8 +5,18 @@ package metrics;
 option go_package = "./proto/metrics/pb";
 
 service MetricsService{
-  rpc RequestTemp(TemperatureRequest) returns (TemperatureResponse) {}
-  rpc RequestPol(PollutionRequest) returns (PollutionResponse) {}
+  rpc RequestTemp(TemperatureRequest) returns (TemperatureResponse) {
+    option (google.api.http) = {
+      post: "/temp"
+      body: "*"
+     };
+    }
+  rpc RequestPol(PollutionRequest) returns (PollutionResponse) {
+    option (google.api.http) = {
+      post: "/pollution"
+      body: "*"
+    };
+  }
 }
 
 message TemperatureResponse {
