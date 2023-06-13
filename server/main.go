@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 
 	metricspb "github.com/kiloMIA/metricsGo/proto/metrics/pb"
 	"google.golang.org/grpc"
@@ -21,7 +22,7 @@ func main() {
 	log.Println("Web server started on localhost:8080")
 	http.ListenAndServe(":8080", nil)
 }
-func getMetricsData(city string) (*metricspb.TemperatureResponse, error) {
+func getMetricsData(city int64) (*metricspb.TemperatureResponse, error) {
 	conn, err := grpc.Dial("localhost:50051", grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("Failed to connect: %v", err)
@@ -44,8 +45,8 @@ func handleIndex(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
 		// Handle the user request
 		city := r.FormValue("city")
-
-		temperatureData, err := getMetricsData(city)
+		num, _ := strconv.ParseInt(city, 10, 64)
+		temperatureData, err := getMetricsData(num)
 		if err != nil {
 			http.Error(w, "Failed to get temperature data", http.StatusInternalServerError)
 			return
