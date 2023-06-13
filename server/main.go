@@ -46,9 +46,9 @@ func getMetricsData(city int64, reqType string) (*metricspb.TemperatureResponse,
 func handleIndex(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
 		// Handle the user request
-		city := r.FormValue("city")
+		city := r.FormValue("cityName")
 		reqType := r.FormValue("reqType")
-		num, _ := strconv.ParseInt(city, 10, 64)
+		num, _ := strconv.ParseInt(city, 10, 32)
 		temperatureData, err := getMetricsData(num, reqType)
 		if err != nil {
 			http.Error(w, "Failed to get temperature data", http.StatusInternalServerError)
