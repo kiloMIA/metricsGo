@@ -11,25 +11,25 @@ service MetricsService{
 }
 
 message TemperatureResponse {
-  string city = 1;
+  int64 city = 1;
   string district = 2;
   int64 temperature = 3;
   int64 humidity = 4;
 }
 
 message PollutionResponse {
-  string city = 1;
+  int64 city = 1;
   string district = 2;
   int64 co2 = 3;
   int64 pm25 = 4;
 }
 
 message TemperatureRequest {
-  string city = 1;
+  int64 city = 1;
   string type = 2;
 }
 
 message PollutionRequest {
-  string city = 1;
+  int64 city = 1;
   string type = 2;
 }

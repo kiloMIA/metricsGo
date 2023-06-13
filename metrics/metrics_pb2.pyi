@@ -8,9 +8,9 @@ class PollutionRequest(_message.Message):
     __slots__ = ["city", "type"]
     CITY_FIELD_NUMBER: _ClassVar[int]
     TYPE_FIELD_NUMBER: _ClassVar[int]
-    city: str
+    city: int
     type: str
-    def __init__(self, city: _Optional[str] = ..., type: _Optional[str] = ...) -> None: ...
+    def __init__(self, city: _Optional[int] = ..., type: _Optional[str] = ...) -> None: ...
 
 class PollutionResponse(_message.Message):
     __slots__ = ["city", "co2", "district", "pm25"]
@@ -18,19 +18,19 @@ class PollutionResponse(_message.Message):
     CO2_FIELD_NUMBER: _ClassVar[int]
     DISTRICT_FIELD_NUMBER: _ClassVar[int]
     PM25_FIELD_NUMBER: _ClassVar[int]
-    city: str
+    city: int
     co2: int
     district: str
     pm25: int
-    def __init__(self, city: _Optional[str] = ..., district: _Optional[str] = ..., co2: _Optional[int] = ..., pm25: _Optional[int] = ...) -> None: ...
+    def __init__(self, city: _Optional[int] = ..., district: _Optional[str] = ..., co2: _Optional[int] = ..., pm25: _Optional[int] = ...) -> None: ...
 
 class TemperatureRequest(_message.Message):
     __slots__ = ["city", "type"]
     CITY_FIELD_NUMBER: _ClassVar[int]
     TYPE_FIELD_NUMBER: _ClassVar[int]
-    city: str
+    city: int
     type: str
-    def __init__(self, city: _Optional[str] = ..., type: _Optional[str] = ...) -> None: ...
+    def __init__(self, city: _Optional[int] = ..., type: _Optional[str] = ...) -> None: ...
 
 class TemperatureResponse(_message.Message):
     __slots__ = ["city", "district", "humidity", "temperature"]
@@ -38,8 +38,8 @@ class TemperatureResponse(_message.Message):
     DISTRICT_FIELD_NUMBER: _ClassVar[int]
     HUMIDITY_FIELD_NUMBER: _ClassVar[int]
     TEMPERATURE_FIELD_NUMBER: _ClassVar[int]
-    city: str
+    city: int
     district: str
     humidity: int
     temperature: int
-    def __init__(self, city: _Optional[str] = ..., district: _Optional[str] = ..., temperature: _Optional[int] = ..., humidity: _Optional[int] = ...) -> None: ...
+    def __init__(self, city: _Optional[int] = ..., district: _Optional[str] = ..., temperature: _Optional[int] = ..., humidity: _Optional[int] = ...) -> None: ...
