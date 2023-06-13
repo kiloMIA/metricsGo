@@ -56,7 +56,7 @@ func handleIndex(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Temperature Data: %v\n", temperatureData)
 	} else {
 		// Serve the HTML file
-		http.ServeFile(w, r, "server/templates/index.html")
+		http.ServeFile(w, r, "templates/index.html")
 
 	}
 }
