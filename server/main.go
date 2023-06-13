@@ -22,6 +22,7 @@ func main() {
 	log.Println("Web server started on localhost:8080")
 	http.ListenAndServe(":8080", nil)
 }
+
 func getMetricsData(city int64) (*metricspb.TemperatureResponse, error) {
 	conn, err := grpc.Dial("localhost:50051", grpc.WithInsecure())
 	if err != nil {

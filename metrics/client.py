@@ -1,5 +1,7 @@
 from concurrent import futures
-
+import logging
+import asyncio
+import json
 import grpc
 from analyzer import analyze
 
@@ -17,22 +19,30 @@ from metrics_pb2_grpc import add_MetricsServiceServicer_to_server, MetricsServic
 
 
 class TemperatureServiceServicer(MetricsServiceServicer):
-    async def CalculateTemperature(self, request, context):
+    def RequestTemp(self, request, context):
         city = request.city
-        req_type = request.type
-        district_list = await analyze(city, req_type)
-        for d in district_list:
-            district = d['district']
-            temperature = d['temperature']
-            humidity = d['humidity']
-            return TemperatureResponse(city=city, district=district, temperature=temperature, humidity=humidity)
+        #req_type = request.type
+        req_type="temperature"
+        district_list = asyncio.run(analyze(city, req_type))
 
+        logging.info(district_list)
+        for district in district_list:
+            return TemperatureResponse(
+                city=city,
+                district=district['district'],
+                temperature=district['temperature'],
+                humidity=district['humidity']
+            )
+      
 
 def serve():
+    logging.basicConfig(level=logging.INFO)
+    logging.info('Starting gRPC server...')
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     add_MetricsServiceServicer_to_server(TemperatureServiceServicer(), server)
-    server.add_insecure_port('[::]:50052')
+    server.add_insecure_port('[::]:50051')
     server.start()
+    logging.info('server has started...')
     server.wait_for_termination()
 
 
