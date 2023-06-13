@@ -19,10 +19,10 @@ class PollutionResponse(_message.Message):
     DISTRICT_FIELD_NUMBER: _ClassVar[int]
     PM25_FIELD_NUMBER: _ClassVar[int]
     city: int
-    co2: int
+    co2: float
     district: str
-    pm25: int
-    def __init__(self, city: _Optional[int] = ..., district: _Optional[str] = ..., co2: _Optional[int] = ..., pm25: _Optional[int] = ...) -> None: ...
+    pm25: float
+    def __init__(self, city: _Optional[int] = ..., district: _Optional[str] = ..., co2: _Optional[float] = ..., pm25: _Optional[float] = ...) -> None: ...
 
 class TemperatureRequest(_message.Message):
     __slots__ = ["city", "type"]
@@ -40,6 +40,6 @@ class TemperatureResponse(_message.Message):
     TEMPERATURE_FIELD_NUMBER: _ClassVar[int]
     city: int
     district: str
-    humidity: int
-    temperature: int
-    def __init__(self, city: _Optional[int] = ..., district: _Optional[str] = ..., temperature: _Optional[int] = ..., humidity: _Optional[int] = ...) -> None: ...
+    humidity: float
+    temperature: float
+    def __init__(self, city: _Optional[int] = ..., district: _Optional[str] = ..., temperature: _Optional[float] = ..., humidity: _Optional[float] = ...) -> None: ...

@@ -1,9 +1,8 @@
 from parser import parse
-import asyncio
 
 
-async def analyze(city_id: int, req_type: str):
-    metrics = await parse(city_id, req_type)
+def analyze(city_id: int, req_type: str):
+    metrics = parse(city_id, req_type)
     if city_id == 1:
         keys = list(metrics.keys())
         size = len(metrics) // 4
@@ -122,6 +121,7 @@ async def analyze(city_id: int, req_type: str):
                 'humidity': tsentr_hum
             }
             oskemen_list = [tsentr_dict, zavodsk_dict, ulbinsk_dict, zashita_dict, ksht_dict]
+            print(oskemen_list)
             return oskemen_list
         else:
             ksht_co, ksht_pm = calculate(ksht, req_type)
@@ -270,9 +270,12 @@ def calculate(dicti, req_type):
             return mean_co, mean_pm
 
 
-async def main():
-    await analyze(2, "temperature")
+# async def main():
+#     await analyze(2, "temperature")
+#
+#
+# loop = asyncio.get_event_loop()
+# loop.run_until_complete(main())
 
-
-loop = asyncio.get_event_loop()
-loop.run_until_complete(main())
+# if __name__ == '__main__':
+#     analyze(2,"temperature")
