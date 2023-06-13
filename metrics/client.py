@@ -31,7 +31,7 @@ class TemperatureServiceServicer(MetricsServiceServicer):
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     add_MetricsServiceServicer_to_server(TemperatureServiceServicer(), server)
-    server.add_insecure_port('[::]:5000')
+    server.add_insecure_port('[::]:50052')
     server.start()
     server.wait_for_termination()
 
