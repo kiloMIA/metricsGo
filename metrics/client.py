@@ -21,9 +21,8 @@ from metrics_pb2_grpc import add_MetricsServiceServicer_to_server, MetricsServic
 class TemperatureServiceServicer(MetricsServiceServicer):
     def RequestTemp(self, request, context):
         city = request.city
-        #req_type = request.type
-        reqType=request.type
-        district_list = asyncio.run(analyze(city, reqType))
+        reqType= request.type
+        district_list = analyze(city, reqType)
 
         logging.info(district_list)
         for district in district_list:
