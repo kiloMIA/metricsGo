@@ -23,7 +23,7 @@ func main() {
 	http.ListenAndServe(":8080", nil)
 }
 
-func getMetricsData(city int64) (*metricspb.TemperatureResponse, error) {
+func getMetricsData(city int64, reqType string) (*metricspb.TemperatureResponse, error) {
 	conn, err := grpc.Dial("localhost:50051", grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("Failed to connect: %v", err)
@@ -33,6 +33,7 @@ func getMetricsData(city int64) (*metricspb.TemperatureResponse, error) {
 	client := metricspb.NewMetricsServiceClient(conn)
 	req := &metricspb.TemperatureRequest{
 		City: city,
+		Type: reqType,
 	}
 
 	res, err := client.RequestTemp(context.Background(), req)
@@ -46,8 +47,9 @@ func handleIndex(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
 		// Handle the user request
 		city := r.FormValue("city")
+		reqType := r.FormValue("reqType")
 		num, _ := strconv.ParseInt(city, 10, 64)
-		temperatureData, err := getMetricsData(num)
+		temperatureData, err := getMetricsData(num, reqType)
 		if err != nil {
 			http.Error(w, "Failed to get temperature data", http.StatusInternalServerError)
 			return
@@ -57,7 +59,7 @@ func handleIndex(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Temperature Data: %v\n", temperatureData)
 	} else {
 		// Serve the HTML file
-		http.ServeFile(w, r, "templates/index.html")
+		http.ServeFile(w, r, "server/templates/index.html")
 
 	}
 }

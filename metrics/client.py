@@ -22,8 +22,8 @@ class TemperatureServiceServicer(MetricsServiceServicer):
     def RequestTemp(self, request, context):
         city = request.city
         #req_type = request.type
-        req_type="temperature"
-        district_list = asyncio.run(analyze(city, req_type))
+        reqType=request.type
+        district_list = asyncio.run(analyze(city, reqType))
 
         logging.info(district_list)
         for district in district_list:
