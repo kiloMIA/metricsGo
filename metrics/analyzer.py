@@ -41,6 +41,8 @@ async def analyze(city_id: int, req_type: str):
                 'temperature': esil_temp,
                 'humidity': esil_hum
             }
+            astana_list = [saryarka_dict, baikonur_dict, almata_dict, esil_dict]
+            return astana_list
         else:
             saryarka_co, saryarka_pm = calculate(saryarka, req_type)
             almata_co, almata_pm = calculate(almata, req_type)
@@ -69,8 +71,10 @@ async def analyze(city_id: int, req_type: str):
                 'city': city_id,
                 'district': 'esil',
                 'co2': esil_co,
-                'pm25':  esil_pm
+                'pm25': esil_pm
             }
+            astana_list = [saryarka_dict, baikonur_dict, almata_dict, esil_dict]
+            return astana_list
 
     elif city_id == 2:
         keys = list(metrics.keys())
@@ -117,6 +121,8 @@ async def analyze(city_id: int, req_type: str):
                 'temperature': tsentr_temp,
                 'humidity': tsentr_hum
             }
+            oskemen_list = [tsentr_dict, zavodsk_dict, ulbinsk_dict, zashita_dict, ksht_dict]
+            return oskemen_list
         else:
             ksht_co, ksht_pm = calculate(ksht, req_type)
             zashita_co, zashita_pm = calculate(zashita, req_type)
@@ -146,14 +152,16 @@ async def analyze(city_id: int, req_type: str):
                 'city': city_id,
                 'district': 'zavodsk',
                 'co2': zavodsk_co,
-                'pm25':zavodsk_pm
+                'pm25': zavodsk_pm
             }
             tsentr_dict = {
                 'city': city_id,
                 'district': 'tsentr',
                 'co2': tsentr_co,
-                'pm25':tsentr_pm
+                'pm25': tsentr_pm
             }
+            oskemen_list = [tsentr_dict, zavodsk_dict, ulbinsk_dict, zashita_dict, ksht_dict]
+            return oskemen_list
 
     elif city_id == 3:
         keys = list(metrics.keys())
@@ -178,7 +186,8 @@ async def analyze(city_id: int, req_type: str):
                 'temperature': atr_vos_temp,
                 'humidity': atr_vos_hum
             }
-
+            atyrau_list = [atr_zap_dict, atr_vos_dict]
+            return atyrau_list
         else:
             atr_zap_co, atr_zap_pm = calculate(atr_zap, req_type)
             atr_vos_co, atr_vos_pm = calculate(atr_vos, req_type)
@@ -195,7 +204,8 @@ async def analyze(city_id: int, req_type: str):
                 'co2': atr_vos_co,
                 'pm25': atr_vos_pm
             }
-
+            atyrau_list = [atr_zap_dict, atr_vos_dict]
+            return atyrau_list
     elif city_id == 4:
         keys = list(metrics.keys())
         size = len(metrics) // 2
@@ -218,6 +228,8 @@ async def analyze(city_id: int, req_type: str):
                 'temperature': sem_yug_temp,
                 'humidity': sem_yug_hum
             }
+            semei_list = [sem_yug_dict, sem_sev_dict]
+            return semei_list
         else:
             sem_yug_co, sem_yug_pm = calculate(sem_yug, req_type)
             sem_sev_co, sem_sev_pm = calculate(sem_sev, req_type)
@@ -233,6 +245,8 @@ async def analyze(city_id: int, req_type: str):
                 'co2': sem_yug_co,
                 'pm25': sem_yug_co
             }
+            semei_list = [sem_yug_dict, sem_sev_dict]
+            return semei_list
 
 
 def calculate(dicti, req_type):
