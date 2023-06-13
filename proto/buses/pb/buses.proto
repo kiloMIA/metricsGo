@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package buses;
+
+option go_package = "./proto/buses/pb";
+
+service BusService{
+  rpc RequestBus(BusRequest) returns (BusResponse) {}
+
+}
+message BusRequest {
+  int64 BusNumber = 1;
+}
+
+message BusResponse {
+  double longitude = 1;
+  double latitude = 2;
+}
