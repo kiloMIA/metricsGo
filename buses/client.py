@@ -7,9 +7,10 @@ from buses_pb2 import BusResponse
 
 
 class BusesServiceServicer(BusServiceServicer):
-    def FindBus(self, request, context):
+    def RequestBus(self, request, context):
         route_number = request.BusNumber
         location = parse(route_number)
+        logging.info(location)
         for bus in location:
             return BusResponse(longitude=location[bus]['longitude'], latitude=location[bus]['latitude'])
 
