@@ -57,6 +57,7 @@ func getMetricsData(city int64, reqType string) (interface{}, error) {
 		return nil, fmt.Errorf("Invalid request type: %s", reqType)
 	}
 }
+
 func getBusData(bus int64) (*bpb.BusResponse, error) {
 	conn, err := grpc.Dial("localhost:50054", grpc.WithInsecure())
 	if err != nil {
