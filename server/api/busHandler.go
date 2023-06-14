@@ -9,6 +9,12 @@ import (
 func (app *application) handleBus(w http.ResponseWriter, r *http.Request) {
 	busRoute := r.FormValue("busRoute")
 	bus, _ := strconv.ParseInt(busRoute, 10, 32)
+
+	err := publishData("bus")
+	if err != nil {
+		http.Error(w, "Failed to publish message", http.StatusInternalServerError)
+	}
+
 	busData, err := getBusData(bus)
 	if err != nil {
 		http.Error(w, "Failed to get bus data", http.StatusInternalServerError)
