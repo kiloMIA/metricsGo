@@ -6,22 +6,45 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"strconv"
+	"os"
+	"time"
 
 	bpb "github.com/kiloMIA/metricsGo/proto/buses/pb"
 	metricspb "github.com/kiloMIA/metricsGo/proto/metrics/pb"
 	"google.golang.org/grpc"
 )
 
+type application struct {
+	logger *log.Logger
+}
+
+const port = "5000"
+
 func main() {
+	logger := log.New(os.Stdout, "", log.Ldate|log.Ltime)
+
 	flag.Parse()
 
-	// Set up routes
-	http.HandleFunc("/", handleIndex)
+	app := &application{
+		logger: logger,
+	}
 
 	// Start the web server
-	log.Println("Web server started on localhost:8080")
-	http.ListenAndServe(":8080", nil)
+	// log.Println("Web server started on localhost:8080")
+	// http.ListenAndServe(":8080", nil)
+
+	srv := &http.Server{
+		Addr:         fmt.Sprintf(":%d", port),
+		Handler:      app.routes(),
+		IdleTimeout:  time.Minute,
+		ReadTimeout:  10 * time.Second,
+		WriteTimeout: 30 * time.Second,
+	}
+
+	logger.Printf("starting server on %s", srv.Addr)
+	err := srv.ListenAndServe()
+
+	logger.Fatal(err)
 }
 
 func getMetricsData(city int64, reqType string) (interface{}, error) {
@@ -76,45 +99,8 @@ func getBusData(bus int64) (*bpb.BusResponse, error) {
 	return res, nil
 }
 
-func handleIndex(w http.ResponseWriter, r *http.Request) {
-	if r.Method == http.MethodPost {
-		// Handle the user request
-		city := r.FormValue("cityName")
-		reqType := r.FormValue("reqType")
-		num, _ := strconv.ParseInt(city, 10, 32)
-		responseData, err := getMetricsData(num, reqType)
-		if err != nil {
-			http.Error(w, "Failed to get data", http.StatusInternalServerError)
-			return
-		}
+func (app *application) handleIndex(w http.ResponseWriter, r *http.Request) {
 
-		switch data := responseData.(type) {
-		case *metricspb.TemperatureResponse:
-			// Handle temperature response
-			fmt.Fprintf(w, "Temperature Data: City %d, District %s, Temperature %d, Humidity %d\n",
-				data.City, data.District, data.Temperature, data.Humidity)
-		case *metricspb.PollutionResponse:
-			// Handle pollution response
-			fmt.Fprintf(w, "Pollution Data: City %d, District %s, CO2 %d, PM2.5 %d\n",
-				data.City, data.District, data.Co2, data.Pm25)
-		default:
-			// Handle unknown response type
-			http.Error(w, "Unknown response type", http.StatusInternalServerError)
-			return
-		}
-		busRoute := r.FormValue("busRoute")
-		bus, _ := strconv.ParseInt(busRoute, 10, 32)
-		busData, err := getBusData(bus)
-		if err != nil {
-			http.Error(w, "Failed to get bus data", http.StatusInternalServerError)
-			return
-		}
-
-		// Display the temperature data on the response page
-		fmt.Fprintf(w, "Bus Data: %v\n", busData)
-
-	} else {
-		// Serve the HTML file
-		http.ServeFile(w, r, "templates/index.html")
-	}
+	// Serve the HTML file
+	http.ServeFile(w, r, "templates/index.html")
 }

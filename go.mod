@@ -3,6 +3,7 @@ module github.com/kiloMIA/metricsGo
 go 1.19
 
 require (
+	github.com/julienschmidt/httprouter v1.3.0
 	google.golang.org/grpc v1.55.0
 	google.golang.org/protobuf v1.30.0
 )
