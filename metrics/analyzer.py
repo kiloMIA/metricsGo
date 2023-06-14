@@ -121,7 +121,6 @@ def analyze(city_id: int, req_type: str):
                 'humidity': tsentr_hum
             }
             oskemen_list = [tsentr_dict, zavodsk_dict, ulbinsk_dict, zashita_dict, ksht_dict]
-            print(oskemen_list)
             return oskemen_list
         else:
             ksht_co, ksht_pm = calculate(ksht, req_type)
@@ -229,6 +228,7 @@ def analyze(city_id: int, req_type: str):
                 'humidity': sem_yug_hum
             }
             semei_list = [sem_yug_dict, sem_sev_dict]
+            print(semei_list)
             return semei_list
         else:
             sem_yug_co, sem_yug_pm = calculate(sem_yug, req_type)
@@ -246,36 +246,33 @@ def analyze(city_id: int, req_type: str):
                 'pm25': sem_yug_co
             }
             semei_list = [sem_yug_dict, sem_sev_dict]
+            print(semei_list)
             return semei_list
 
 
 def calculate(dicti, req_type):
+    dicti_temperature = 0
+    dicti_humidity = 0
+    dicti_co = 0
+    dicti_pm = 0
     size = len(dicti)
+
     for item in dicti.values():
-        dicti_temperature = 0
-        dicti_humidity = 0
-        dicti_co = 0
-        dicti_pm = 0
         if req_type == "temperature":
             dicti_temperature += item['temperature']
             dicti_humidity += item['humidity']
-            mean_temp = dicti_temperature / size
-            mean_hum = dicti_humidity / size
-            return mean_temp, mean_hum
         else:
             dicti_co += item['co2']
             dicti_pm += item['pm25']
-            mean_co = dicti_co / size
-            mean_pm = dicti_pm / size
-            return mean_co, mean_pm
 
+    if req_type == "temperature":
+        mean_temp = dicti_temperature / size
+        mean_hum = dicti_humidity / size
+        return mean_temp, mean_hum
+    else:
+        mean_co = dicti_co / size
+        mean_pm = dicti_pm / size
+        return mean_co, mean_pm
 
-# async def main():
-#     await analyze(2, "temperature")
-#
-#
-# loop = asyncio.get_event_loop()
-# loop.run_until_complete(main())
-
-# if __name__ == '__main__':
-#     analyze(2,"temperature")
+if __name__ == '__main__':
+    analyze(4,"temperature")

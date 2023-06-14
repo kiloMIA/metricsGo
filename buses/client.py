@@ -13,9 +13,9 @@ from buses_pb2 import BusResponse
 
 
 class BusesServiceServicer(BusServiceServicer):
-    async def FindBus(self, request, context):
+    def FindBus(self, request, context):
         route_number = request.BusNumber
-        location = await parse(route_number)
+        location = parse(route_number)
         for bus in location:
             return BusResponse(longitude=location[bus]['longitude'], latitude=location[bus]['latitude'])
 
