@@ -18,7 +18,7 @@ type application struct {
 	logger *log.Logger
 }
 
-const port = "5000"
+const port = 8080
 
 func main() {
 	logger := log.New(os.Stdout, "", log.Ldate|log.Ltime)
@@ -102,5 +102,5 @@ func getBusData(bus int64) (*bpb.BusResponse, error) {
 func (app *application) handleIndex(w http.ResponseWriter, r *http.Request) {
 
 	// Serve the HTML file
-	http.ServeFile(w, r, "templates/index.html")
+	http.ServeFile(w, r, "server/templates/index.html")
 }
