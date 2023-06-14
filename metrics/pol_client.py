@@ -22,6 +22,7 @@ class PollutionServiceServicer(MetricsServiceServicer):
                 district=district['district'],
                 pm25=district['pm25']
             )
+
     def RequestTemp(self, request, context):
         city = request.city
         reqType = request.type

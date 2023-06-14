@@ -57,38 +57,7 @@ func getMetricsData(city int64, reqType string) (interface{}, error) {
 	}
 }
 
-//	func handleIndex(w http.ResponseWriter, r *http.Request) {
-//		if r.Method == http.MethodPost {
-//			// Handle the user request
-//			city := r.FormValue("cityName")
-//			reqType := r.FormValue("reqType")
-//			num, _ := strconv.ParseInt(city, 10, 32)
-//			temperatureData, err := getMetricsData(num, reqType)
-//	       if err != nil {
-//	           http.Error(w, "Failed to get data", http.StatusInternalServerError)
-//	           return
-//	       }
-//
-//	       switch data := temperatureData.(type) {
-//	       case *metricspb.TemperatureResponse:
-//	           // Handle temperature response
-//	           fmt.Fprintf(w, "Temperature Data: %v\n", data)
-//	       case *metricspb.PollutionResponse:
-//	           // Handle pollution response
-//	           fmt.Fprintf(w, "Pollution Data: %v\n", data)
-//	       default:
-//	           // Handle unknown response type
-//	           http.Error(w, "Unknown response type", http.StatusInternalServerError)
-//	           return
-//
-//			// Display the temperature data on the response page
-//			fmt.Fprintf(w, "Temperature Data: %v\n", temperatureData)
-//		} else {
-//			// Serve the HTML file
-//			http.ServeFile(w, r, "templates/index.html")
-//
-//		}
-//	}
+
 func handleIndex(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
 		// Handle the user request

@@ -228,7 +228,6 @@ def analyze(city_id: int, req_type: str):
                 'humidity': sem_yug_hum
             }
             semei_list = [sem_yug_dict, sem_sev_dict]
-            print(semei_list)
             return semei_list
         else:
             sem_yug_co, sem_yug_pm = calculate(sem_yug, req_type)
@@ -246,7 +245,6 @@ def analyze(city_id: int, req_type: str):
                 'pm25': sem_yug_co
             }
             semei_list = [sem_yug_dict, sem_sev_dict]
-            print(semei_list)
             return semei_list
 
 
@@ -274,5 +272,5 @@ def calculate(dicti, req_type):
         mean_pm = dicti_pm / size
         return mean_co, mean_pm
 
-if __name__ == '__main__':
-    analyze(4,"temperature")
+# if __name__ == '__main__':
+#     analyze(4,"temperature")

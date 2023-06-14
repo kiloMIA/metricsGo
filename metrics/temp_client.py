@@ -9,15 +9,6 @@ from metrics_pb2 import TemperatureResponse, PollutionResponse
 from metrics_pb2_grpc import add_MetricsServiceServicer_to_server, MetricsServiceServicer
 
 
-# logging.basicConfig(format='%(asctime)s:%(name)s : %(message)s', level=logging.DEBUG)
-# log = logging.getLogger(__name__)
-#
-# socket = 'localhost:50051'
-# channel = grpc.insecure_channel(socket)
-# client = mgrpc.MetricsServiceStub(channel)
-# log.info(f"Connected to the Server : {socket}")
-
-
 class TemperatureServiceServicer(MetricsServiceServicer):
     def RequestTemp(self, request, context):
         city = request.city
@@ -32,6 +23,7 @@ class TemperatureServiceServicer(MetricsServiceServicer):
                 temperature=district['temperature'],
                 humidity=district['humidity']
             )
+
     def RequestPol(self, request, context):
         city = request.city
         reqType = request.type
