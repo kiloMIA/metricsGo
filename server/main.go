@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"strconv"
 
+	bpb "github.com/kiloMIA/metricsGo/proto/buses/pb"
 	metricspb "github.com/kiloMIA/metricsGo/proto/metrics/pb"
 	"google.golang.org/grpc"
 )
@@ -56,7 +57,23 @@ func getMetricsData(city int64, reqType string) (interface{}, error) {
 		return nil, fmt.Errorf("Invalid request type: %s", reqType)
 	}
 }
+func getBusData(bus int64) (*bpb.BusResponse, error) {
+	conn, err := grpc.Dial("localhost:50054", grpc.WithInsecure())
+	if err != nil {
+		log.Fatalf("Failed to connect: %v", err)
+	}
+	defer conn.Close()
 
+	client := bpb.NewBusServiceClient(conn)
+	bus_req := &bpb.BusRequest{
+		BusNumber: bus,
+	}
+	res, err := client.RequestBus(context.Background(), bus_req)
+	if err != nil {
+		log.Fatalf("Failed to get temprature data: %v", err)
+	}
+	return res, nil
+}
 
 func handleIndex(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
@@ -84,6 +101,17 @@ func handleIndex(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Unknown response type", http.StatusInternalServerError)
 			return
 		}
+		busRoute := r.FormValue("busRoute")
+		bus, _ := strconv.ParseInt(busRoute, 10, 32)
+		busData, err := getBusData(bus)
+		if err != nil {
+			http.Error(w, "Failed to get temperature data", http.StatusInternalServerError)
+			return
+		}
+
+		// Display the temperature data on the response page
+		fmt.Fprintf(w, "Bus Data: %v\n", busData)
+
 	} else {
 		// Serve the HTML file
 		http.ServeFile(w, r, "templates/index.html")
