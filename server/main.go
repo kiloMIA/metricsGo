@@ -70,7 +70,7 @@ func getBusData(bus int64) (*bpb.BusResponse, error) {
 	}
 	res, err := client.RequestBus(context.Background(), bus_req)
 	if err != nil {
-		log.Fatalf("Failed to get temprature data: %v", err)
+		log.Fatalf("Failed to get bus data: %v", err)
 	}
 	return res, nil
 }
@@ -105,7 +105,7 @@ func handleIndex(w http.ResponseWriter, r *http.Request) {
 		bus, _ := strconv.ParseInt(busRoute, 10, 32)
 		busData, err := getBusData(bus)
 		if err != nil {
-			http.Error(w, "Failed to get temperature data", http.StatusInternalServerError)
+			http.Error(w, "Failed to get bus data", http.StatusInternalServerError)
 			return
 		}
 

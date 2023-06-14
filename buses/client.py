@@ -1,3 +1,4 @@
+import logging
 from concurrent import futures
 import grpc
 from parser import parse
@@ -14,10 +15,13 @@ class BusesServiceServicer(BusServiceServicer):
 
 
 def serve():
+    logging.basicConfig(level=logging.INFO)
+    logging.info('Starting gRPC server...')
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     add_BusServiceServicer_to_server(BusesServiceServicer(), server)
     server.add_insecure_port('[::]:50054')
     server.start()
+    logging.info('server has started...')
     server.wait_for_termination()
 
 
