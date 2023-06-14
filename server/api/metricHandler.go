@@ -12,6 +12,12 @@ func (app *application) handleMetrics(w http.ResponseWriter, r *http.Request) {
 	city := r.FormValue("cityName")
 	reqType := r.FormValue("reqType")
 	num, _ := strconv.ParseInt(city, 10, 32)
+
+	err := publishData("metrics")
+	if err != nil {
+		http.Error(w, "Failed to publish message", http.StatusInternalServerError)
+	}
+
 	responseData, err := getMetricsData(num, reqType)
 	if err != nil {
 		http.Error(w, "Failed to get data", http.StatusInternalServerError)
