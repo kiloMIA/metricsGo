@@ -111,35 +111,23 @@ func consumeBusDataFromQueue() (*bpb.BusResponse, error) {
 
 	return busResponse, nil
 }
-
-func consumeMetricDataFromQueue() (interface{}, error) {
-	var metricResponse interface{}
+func consumeFromQueue(queueName string) (map[string]interface{}, error) {
 	conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
 	if err != nil {
-		log.Fatalf("Failed to connect to RabbitMQ: %v", err)
+		log.Fatalf("Failed to connect to RabbitMQ: %s", err)
+		return nil, err
 	}
 	defer conn.Close()
 
 	ch, err := conn.Channel()
 	if err != nil {
-		log.Fatalf("Failed to open a channel: %v", err)
+		log.Fatalf("Failed to open a channel: %s", err)
+		return nil, err
 	}
 	defer ch.Close()
 
-	q, err := ch.QueueDeclare(
-		"metric_queue",
-		false,
-		false,
-		false,
-		false,
-		nil,
-	)
-	if err != nil {
-		log.Fatalf("Failed to declare a queue: %v", err)
-	}
-
 	msgs, err := ch.Consume(
-		q.Name,
+		queueName,
 		"",
 		true,
 		false,
@@ -148,25 +136,21 @@ func consumeMetricDataFromQueue() (interface{}, error) {
 		nil,
 	)
 	if err != nil {
-		log.Fatalf("Failed to register a consumer: %v", err)
+		log.Fatalf("Failed to register a consumer: %s", err)
+		return nil, err
 	}
 
-	msg := <-msgs
-
-	switch msg.RoutingKey {
-	case "temperature_queue":
-		metricResponse = &metricspb.TemperatureResponse{}
-
-	case "pollution_queue":
-		metricResponse = &metricspb.PollutionResponse{}
+	var data map[string]interface{}
+	select {
+	case msg := <-msgs:
+		err := json.Unmarshal(msg.Body, &data)
+		if err != nil {
+			log.Printf("Error decoding JSON: %s", err)
+			return nil, err
+		}
 	}
 
-	err = json.Unmarshal(msg.Body, metricResponse)
-	if err != nil {
-		log.Fatalf("Failed to unmarshal message body: %v", err)
-	}
-
-	return metricResponse, nil
+	return data, nil
 }
 
 func chooseCity(city string) int64 {
