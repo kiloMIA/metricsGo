@@ -2,6 +2,55 @@
 <html>
 <head>
     <title>City Temperature</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #555;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
     <h1>City Temperature</h1>
@@ -9,15 +58,15 @@
     <form action="/metrics" method="POST">
         <label for="cityName">City Name:</label>
         <input type="text" id="cityName" name="cityName" required>
-        <label for="reqType"></label><input type="text" id="reqType" name="reqType" required>
         <br>
-        <input type="submit" value="Submit">
+        <input type="submit" value="Get Temperature">
     </form>
+
     <form action="/bus" method="POST">
         <label for="busRoute">Route of Bus:</label>
         <input type="text" id="busRoute" name="busRoute" required>
         <br>
-        <input type="submit" value="Submit">
+        <input type="submit" value="Get Bus Information">
     </form>
 </body>
 </html>
