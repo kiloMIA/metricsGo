@@ -64,7 +64,7 @@ func getMetricsData(city int64, reqType string) (interface{}, error) {
 	}
 }
 
-func consumeBusDataFromQueue() (*bpb.BusResponse, error) {
+func consumeBusDataFromQueue() ([]*bpb.BusResponse, error) {
 	conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
 	if err != nil {
 		log.Fatalf("Failed to connect to RabbitMQ: %v", err)
@@ -89,29 +89,33 @@ func consumeBusDataFromQueue() (*bpb.BusResponse, error) {
 		log.Fatalf("Failed to declare a queue: %v", err)
 	}
 
-	msgs, err := ch.Consume(
-		q.Name,
-		"",
-		true,
-		false,
-		false,
-		false,
-		nil,
-	)
-	if err != nil {
-		log.Fatalf("Failed to register a consumer: %v", err)
+	var data []*bpb.BusResponse
+	for {
+		delivery, ok, err := ch.Get(
+			q.Name,
+			true,
+		)
+		if err != nil {
+			log.Fatalf("Failed to register a consumer: %s", err)
+			return nil, err
+		}
+		if !ok {
+			break // No more messages in the queue
+		}
+
+		busResponse := &bpb.BusResponse{}
+		err = json.Unmarshal(delivery.Body, busResponse)
+		if err != nil {
+			log.Printf("Error decoding JSON: %s", err)
+			return nil, err
+		}
+		data = append(data, busResponse)
 	}
 
-	msg := <-msgs
-	busResponse := &bpb.BusResponse{}
-	err = json.Unmarshal(msg.Body, busResponse)
-	if err != nil {
-		log.Fatalf("Failed to unmarshal message body: %v", err)
-	}
-
-	return busResponse, nil
+	return data, nil
 }
-func consumeFromQueue(queueName string) (map[string]interface{}, error) {
+
+func consumeFromQueue(queueName string) ([]map[string]interface{}, error) {
 	conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
 	if err != nil {
 		log.Fatalf("Failed to connect to RabbitMQ: %s", err)
@@ -126,28 +130,26 @@ func consumeFromQueue(queueName string) (map[string]interface{}, error) {
 	}
 	defer ch.Close()
 
-	msgs, err := ch.Consume(
-		queueName,
-		"",
-		true,
-		false,
-		false,
-		false,
-		nil,
-	)
-	if err != nil {
-		log.Fatalf("Failed to register a consumer: %s", err)
-		return nil, err
-	}
-
-	var data map[string]interface{}
-	select {
-	case msg := <-msgs:
-		err := json.Unmarshal(msg.Body, &data)
+	var data []map[string]interface{}
+	for {
+		msg, ok, err := ch.Get(
+			queueName,
+			true, // autoAcknowledge
+		)
+		if err != nil {
+			log.Fatalf("Failed to register a consumer: %s", err)
+			return nil, err
+		}
+		if !ok {
+			break // No more messages in the queue
+		}
+		var singleMsg map[string]interface{}
+		err = json.Unmarshal(msg.Body, &singleMsg)
 		if err != nil {
 			log.Printf("Error decoding JSON: %s", err)
 			return nil, err
 		}
+		data = append(data, singleMsg)
 	}
 
 	return data, nil

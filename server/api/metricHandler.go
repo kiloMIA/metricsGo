@@ -1,7 +1,8 @@
 package main
 
 import (
-	"fmt"
+	"encoding/json"
+	"log"
 	"net/http"
 )
 
@@ -11,29 +12,27 @@ func (app *application) handleMetrics(w http.ResponseWriter, r *http.Request) {
 	num := chooseCity(city)
 
 	_, err := getMetricsData(num, reqType)
-	if err != nil {
-		http.Error(w, "Failed to get data", http.StatusInternalServerError)
-		return
-	}
 
-	var metricData map[string]interface{}
+	var metricData []map[string]interface{}
 	switch reqType {
 	case "temperature":
 		metricData, err = consumeFromQueue("temperature_queue")
-		if err != nil {
-			http.Error(w, "Failed to get temperature data from queue", http.StatusInternalServerError)
-			return
-		}
-		fmt.Fprintf(w, "Temperature Data: %v\n", metricData)
+
+		errorResponse("Failed to get temperature data from queue", http.StatusInternalServerError, w, r, err)
+
 	case "pollution":
 		metricData, err = consumeFromQueue("pollution_queue")
-		if err != nil {
-			http.Error(w, "Failed to get pollution data from queue", http.StatusInternalServerError)
-			return
-		}
-		fmt.Fprintf(w, "Pollution Data: %v\n", metricData)
+
+		errorResponse("Failed to get pollution data from queue", http.StatusInternalServerError, w, r, err)
+
 	default:
-		http.Error(w, "Unknown metric type", http.StatusBadRequest)
-		return
+		errorResponse("Unknown request type", http.StatusBadGateway, w, r, err)
+
 	}
+	jsonData, err := json.MarshalIndent(metricData, "", "    ")
+	errorResponse("Failed To Convert To JSON Data", http.StatusInternalServerError, w, r, err)
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(jsonData)
+	log.Print(metricData)
 }
