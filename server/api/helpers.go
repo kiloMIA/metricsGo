@@ -2,9 +2,9 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
-	"time"
 
 	bpb "github.com/kiloMIA/metricsGo/proto/buses/pb"
 	metricspb "github.com/kiloMIA/metricsGo/proto/metrics/pb"
@@ -64,52 +64,52 @@ func getMetricsData(city int64, reqType string) (interface{}, error) {
 	}
 }
 
-func publishData(routingKey string) error {
-	conn, err := amqp.Dial(rbmq)
+func consumeBusDataFromQueue() (*bpb.BusResponse, error) {
+	conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
 	if err != nil {
-		return fmt.Errorf("could not connect to rabbitmq, %v", err)
+		log.Fatalf("Failed to connect to RabbitMQ: %v", err)
 	}
 	defer conn.Close()
 
 	ch, err := conn.Channel()
-
 	if err != nil {
-		return fmt.Errorf("could not open channel, %v", err)
+		log.Fatalf("Failed to open a channel: %v", err)
 	}
 	defer ch.Close()
 
-	err = ch.ExchangeDeclare(
-		"data_direct", //exchnage name
-		"direct",      //type
-		true,          //durable
-		false,         //auto-deleted
-		false,         //internal
-		false,         //no-wait
-		nil,           //arguments
+	q, err := ch.QueueDeclare(
+		"bus_queue",
+		false,
+		false,
+		false,
+		false,
+		nil,
 	)
 	if err != nil {
-
-		return fmt.Errorf("could not create exchange, %v", err)
+		log.Fatalf("Failed to declare a queue: %v", err)
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-
-	err = ch.PublishWithContext(ctx,
-		"data_direct", //exchange
-		routingKey,    //routing key
+	msgs, err := ch.Consume(
+		q.Name,
+		"",
+		true,
 		false,
 		false,
-		amqp.Publishing{
-			ContentType: "text/plain",
-			Body:        []byte("a"),
-		})
-
+		false,
+		nil,
+	)
 	if err != nil {
-		return fmt.Errorf("could not publish message, %v", err)
+		log.Fatalf("Failed to register a consumer: %v", err)
 	}
 
-	return nil
+	msg := <-msgs
+	busResponse := &bpb.BusResponse{}
+	err = json.Unmarshal(msg.Body, busResponse)
+	if err != nil {
+		log.Fatalf("Failed to unmarshal message body: %v", err)
+	}
+
+	return busResponse, nil
 }
 
 func chooseCity(city string) int64 {
