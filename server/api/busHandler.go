@@ -7,7 +7,7 @@ import (
 )
 
 func (app *application) handleBus(w http.ResponseWriter, r *http.Request) {
-	busRoute := r.FormValue("busRoute")
+	busRoute := r.FormValue("route_number")
 	bus, _ := strconv.ParseInt(busRoute, 10, 32)
 
 	err := publishData("bus")

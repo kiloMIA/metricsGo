@@ -3,15 +3,16 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"strconv"
 
 	metricspb "github.com/kiloMIA/metricsGo/proto/metrics/pb"
 )
 
 func (app *application) handleMetrics(w http.ResponseWriter, r *http.Request) {
-	city := r.FormValue("cityName")
-	reqType := r.FormValue("reqType")
-	num, _ := strconv.ParseInt(city, 10, 32)
+	city := r.FormValue("city")
+
+	reqType := r.FormValue("metric")
+	//num, _ := strconv.ParseInt(i, 10, 32)
+	num := chooseCity(city)
 
 	err := publishData("metrics")
 	if err != nil {

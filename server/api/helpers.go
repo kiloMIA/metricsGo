@@ -111,3 +111,19 @@ func publishData(routingKey string) error {
 
 	return nil
 }
+
+func chooseCity(city string) int64 {
+	var id int64
+	switch city {
+	case "astana":
+		id = 1
+	case "oskemen":
+		id = 2
+	case "atyrau":
+		id = 4
+	case "semey":
+		id = 3
+	}
+
+	return id
+}

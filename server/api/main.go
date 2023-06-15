@@ -44,6 +44,8 @@ func main() {
 
 func (app *application) handleIndex(w http.ResponseWriter, r *http.Request) {
 
-	// Serve the HTML file
+	// server static files
+
+	// serve the html file
 	http.ServeFile(w, r, "server/templates/index.html")
 }
