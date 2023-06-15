@@ -11,7 +11,7 @@ func (app *application) routes() http.Handler {
 	router := httprouter.New()
 
 	staticHandler := http.FileServer(http.Dir("server/templates/static"))
-	http.Handle("/static/", http.StripPrefix("/static/", staticHandler))
+	router.Handler("GET", "/static/*filepath", http.StripPrefix("/static/", staticHandler))
 
 	router.HandlerFunc(http.MethodPost, "/metrics", app.handleMetrics)
 	router.HandlerFunc(http.MethodGet, "/", app.handleIndex)
