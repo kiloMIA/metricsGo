@@ -1,34 +1,20 @@
-FROM python:3.10 AS build
+# Use the official Python base image
+FROM python:3.11
 
-# Copy the requirements file into the image
-COPY ./requirements.txt /app/buses/requirements.txt
+# Set the working directory inside the container
+WORKDIR /app
 
-# Switch working directory
-WORKDIR /app/buses
+# Copy the requirements.txt file
+COPY requirements.txt .
 
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
-
-# Install the dependencies and packages in the requirements file
+# Install the Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy every content from the local file to the image
-COPY . /app/buses
+# Copy the project files
+COPY . .
 
-# Second stage: Runtime
-FROM python:3.10-slim
+# Expose the gRPC server port
+EXPOSE 50054
 
-# Switch working directory
-WORKDIR /app/buses
-
-# Copy the requirements file from the build stage
-COPY --from=build /app/buses/requirements.txt /app/buses/requirements.txt
-
-# Install the packages specified in the requirements file
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy only necessary files from the build stage
-COPY --from=build /app/buses /app/buses
-
-# Run the application
-CMD ["python", "client.py"]
+# Set the entrypoint command to run the Python script
+CMD [ "python", "client.py" ]
