@@ -1,6 +1,8 @@
 import logging
 from concurrent import futures
 import grpc
+
+from buses.producer import send_bus_response
 from parser import parse
 from buses_pb2_grpc import add_BusServiceServicer_to_server, BusServiceServicer
 from buses_pb2 import BusResponse
@@ -12,7 +14,7 @@ class BusesServiceServicer(BusServiceServicer):
         location = parse(route_number)
         logging.info(location)
         for bus in location:
-            return BusResponse(longitude=location[bus]['longitude'], latitude=location[bus]['latitude'])
+            send_bus_response(BusResponse(longitude=location[bus]['longitude'], latitude=location[bus]['latitude']))
 
 
 def serve():
