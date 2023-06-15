@@ -20,6 +20,12 @@ func (app *application) handleMetrics(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	metricData, err := consumeBusDataFromQueue()
+	if err != nil {
+		http.Error(w, "Failed to get bus data from queue", http.StatusInternalServerError)
+		return
+	}
+
 	switch data := responseData.(type) {
 	case *metricspb.TemperatureResponse:
 		// Handle temperature response
@@ -34,5 +40,7 @@ func (app *application) handleMetrics(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Unknown response type", http.StatusInternalServerError)
 		return
 	}
+
+	fmt.Fprintf(w, "Bus Data: %v\n", metricData)
 
 }
