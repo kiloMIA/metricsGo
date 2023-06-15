@@ -1,23 +1,38 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>City Temperature</title>
+    <title>City and Metric Selection</title>
+    <link rel="stylesheet" href="/static/index.css">
 </head>
 <body>
-    <h1>City Temperature</h1>
-
+<div class="container">
+    <h2>Metrics</h2>
     <form action="/metrics" method="POST">
-        <label for="cityName">City Name:</label>
-        <input type="text" id="cityName" name="cityName" required>
-        <label for="reqType"></label><input type="text" id="reqType" name="reqType" required>
-        <br>
+        <label for="city">Choose a city:</label>
+        <select id="city" name="city">
+            <option value="astana">Astana</option>
+            <option value="oskemen">Oskemen</option>
+            <option value="semey">Semey</option>
+            <option value="atyrau">Atyrau</option>
+        </select>
+
+        <label for="metric">Choose a metric:</label>
+        <select id="metric" name="metric">
+            <option value="pollution">Pollution</option>
+            <option value="temperature">Temperature</option>
+        </select>
+
         <input type="submit" value="Submit">
     </form>
+</div>
+
+<div class="container">
+    <h2>Bus Tracking for Astana</h2>
     <form action="/bus" method="POST">
-        <label for="busRoute">Route of Bus:</label>
-        <input type="text" id="busRoute" name="busRoute" required>
-        <br>
+        <label for="route_number">Choose a route number:</label>
+        <input type="number" id="route_number" name="route_number" min="1" max="999">
         <input type="submit" value="Submit">
     </form>
+</div>
 </body>
 </html>

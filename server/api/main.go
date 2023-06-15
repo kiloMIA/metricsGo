@@ -13,7 +13,10 @@ type application struct {
 	logger *log.Logger
 }
 
-const port = 8080
+const (
+	port = 8080
+	rbmq = "amqp://guest:guest@localhost:5672/"
+)
 
 func main() {
 	logger := log.New(os.Stdout, "", log.Ldate|log.Ltime)
@@ -25,9 +28,6 @@ func main() {
 	}
 
 	// Start the web server
-	// log.Println("Web server started on localhost:8080")
-	// http.ListenAndServe(":8080", nil)
-
 	srv := &http.Server{
 		Addr:         fmt.Sprintf(":%d", port),
 		Handler:      app.routes(),
@@ -44,6 +44,8 @@ func main() {
 
 func (app *application) handleIndex(w http.ResponseWriter, r *http.Request) {
 
-	// Serve the HTML file
+	// server static files
+
+	// serve the html file
 	http.ServeFile(w, r, "server/templates/index.html")
 }
