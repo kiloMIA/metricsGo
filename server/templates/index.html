@@ -1,72 +1,38 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>City Temperature</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f2f2f2;
-        }
-
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-
-        form {
-            max-width: 400px;
-            margin: 0 auto;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        label {
-            display: block;
-            margin-bottom: 10px;
-            color: #555;
-        }
-
-        input[type="text"] {
-            width: 100%;
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
-        input[type="submit"] {
-            width: 100%;
-            padding: 10px;
-            font-size: 16px;
-            color: #fff;
-            background-color: #007bff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        input[type="submit"]:hover {
-            background-color: #0056b3;
-        }
-    </style>
+    <title>City and Metric Selection</title>
+    <link rel="stylesheet" href="/static/index.css">
 </head>
 <body>
-    <h1>City Temperature</h1>
-
+<div class="container">
+    <h2>Metrics</h2>
     <form action="/metrics" method="POST">
-        <label for="cityName">City Name:</label>
-        <input type="text" id="cityName" name="cityName" required>
-        <br>
-        <input type="submit" value="Get Temperature">
-    </form>
+        <label for="city">Choose a city:</label>
+        <select id="city" name="city">
+            <option value="astana">Astana</option>
+            <option value="oskemen">Oskemen</option>
+            <option value="semey">Semey</option>
+            <option value="atyrau">Atyrau</option>
+        </select>
 
-    <form action="/bus" method="POST">
-        <label for="busRoute">Route of Bus:</label>
-        <input type="text" id="busRoute" name="busRoute" required>
-        <br>
-        <input type="submit" value="Get Bus Information">
+        <label for="metric">Choose a metric:</label>
+        <select id="metric" name="metric">
+            <option value="pollution">Pollution</option>
+            <option value="temperature">Temperature</option>
+        </select>
+
+        <input type="submit" value="Submit">
     </form>
+</div>
+
+<div class="container">
+    <h2>Bus Tracking for Astana</h2>
+    <form action="/bus" method="POST">
+        <label for="route_number">Choose a route number:</label>
+        <input type="number" id="route_number" name="route_number" min="1" max="999">
+        <input type="submit" value="Submit">
+    </form>
+</div>
 </body>
 </html>
