@@ -11,7 +11,7 @@ import (
 )
 
 func getBusData(bus int64) (*bpb.BusResponse, error) {
-	conn, err := grpc.Dial("localhost:50054", grpc.WithInsecure())
+	conn, err := grpc.Dial("buses:50054", grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("Failed to connect: %v", err)
 	}
@@ -29,7 +29,7 @@ func getBusData(bus int64) (*bpb.BusResponse, error) {
 }
 
 func getMetricsData(city int64, reqType string) (interface{}, error) {
-	conn, err := grpc.Dial("localhost:50052", grpc.WithInsecure())
+	conn, err := grpc.Dial("metrics:50052", grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("Failed to connect: %v", err)
 	}

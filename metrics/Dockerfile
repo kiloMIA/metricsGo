@@ -15,6 +15,6 @@ COPY . .
 
 # Expose the gRPC server port
 EXPOSE 50052
-EXPOSE 50053
+
 # Run the application
-CMD ["python", "pol_client.py","&","python", "temp_client.py"]
+CMD ["python", "temp_client.py"]

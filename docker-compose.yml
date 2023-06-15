@@ -1,0 +1,19 @@
+version: '3.8'
+services:
+  buses:
+    build:
+      context: ./buses
+    ports:
+      - 50054:50054
+
+  metrics:
+    build:
+      context: ./metrics
+    ports:
+      - 50052:50052
+
+  server:
+    build:
+      context: ./
+    ports:
+      - 8080:8080
