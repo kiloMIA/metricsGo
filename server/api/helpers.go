@@ -13,7 +13,7 @@ import (
 )
 
 func getBusData(bus int64) (*bpb.BusResponse, error) {
-	conn, err := grpc.Dial("localhost:50054", grpc.WithInsecure())
+	conn, err := grpc.Dial("buses:50054", grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("failed to connect: %v", err)
 	}
@@ -31,7 +31,7 @@ func getBusData(bus int64) (*bpb.BusResponse, error) {
 }
 
 func getMetricsData(city int64, reqType string) (interface{}, error) {
-	conn, err := grpc.Dial("localhost:50052", grpc.WithInsecure())
+	conn, err := grpc.Dial("metrics:50052", grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("failed to connect: %v", err)
 	}
@@ -65,7 +65,7 @@ func getMetricsData(city int64, reqType string) (interface{}, error) {
 }
 
 func consumeBusDataFromQueue() ([]*bpb.BusResponse, error) {
-	conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
+	conn, err := amqp.Dial("amqp://guest:guest@rabbitmq:5672/")
 	if err != nil {
 		log.Fatalf("Failed to connect to RabbitMQ: %v", err)
 	}
@@ -116,7 +116,7 @@ func consumeBusDataFromQueue() ([]*bpb.BusResponse, error) {
 }
 
 func consumeFromQueue(queueName string) ([]map[string]interface{}, error) {
-	conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
+	conn, err := amqp.Dial("amqp://guest:guest@rabbitmq:5672/")
 	if err != nil {
 		log.Fatalf("Failed to connect to RabbitMQ: %s", err)
 		return nil, err

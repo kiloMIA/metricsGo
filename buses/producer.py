@@ -4,7 +4,7 @@ from buses_pb2 import BusResponse
 
 
 def send_bus_response(bus_response):
-    connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host='rabbitmq'))
     channel = connection.channel()
     channel.queue_declare(queue='bus_queue')
 
