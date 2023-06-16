@@ -1,12 +1,17 @@
 package main
 
 import (
-	"fmt"
+	"encoding/json"
+	"html/template"
 	"net/http"
 	"strconv"
 )
 
 func (app *application) handleBus(w http.ResponseWriter, r *http.Request) {
+	var extractedData []struct {
+		Longitude float64 `json:"longitude"`
+		Latitude  float64 `json:"latitude"`
+	}
 	busRoute := r.FormValue("route_number")
 	bus, _ := strconv.ParseInt(busRoute, 10, 32)
 
@@ -22,6 +27,23 @@ func (app *application) handleBus(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Display the bus data on the response page
-	fmt.Fprintf(w, "Bus Data: %v\n", busData)
+	for _, data := range busData {
+		extractedData = append(extractedData, struct {
+			Longitude float64 `json:"longitude"`
+			Latitude  float64 `json:"latitude"`
+		}{
+			Longitude: data.Longitude,
+			Latitude:  data.Latitude,
+		})
+	}
+
+	jsonData, err := json.Marshal(extractedData)
+	errorResponse("Failed to encode", http.StatusInternalServerError, w, r, err)
+
+	tmpl, err := template.ParseFiles("server/templates/bus.html")
+	errorResponse("Failed to parse files", http.StatusInternalServerError, w, r, err)
+
+	err = tmpl.Execute(w, string(jsonData))
+
+	errorResponse("Failed to execute template", http.StatusInternalServerError, w, r, err)
 }
