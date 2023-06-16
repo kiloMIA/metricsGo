@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
+
+      <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script>
+
+    <title>Bus Tracking</title>
+
+    <style>
+        #map {
+            height: 100vh;
+            width:100%;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Bus Tracking</h2>
+    <div id="map"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.js"></script>
+<script>
+  var map = L.map('map').setView([51.169392, 71.449074], 13);
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+}).addTo(map);
+  
+
+  var busData = JSON.parse('{{ . }}');
+
+  for (var i = 0; i < busData.length; i++) {
+    var bus = busData[i];
+    var longitude = bus.longitude;
+    var latitude = bus.latitude;
+
+    if (typeof longitude === 'number' && typeof latitude === 'number') {
+      var marker = L.marker([latitude, longitude]).addTo(map);
+      marker.bindPopup('Coordinates: ' + latitude + ', ' + longitude);
+    }
+  }
+</script>
+</body>
+</html>
