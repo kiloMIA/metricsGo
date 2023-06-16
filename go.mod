@@ -11,7 +11,6 @@ require (
 
 require (
 	github.com/golang/protobuf v1.5.3 // indirect
-	github.com/streadway/amqp v1.0.0
 	golang.org/x/net v0.8.0 // indirect
 	golang.org/x/sys v0.6.0 // indirect
 	golang.org/x/text v0.8.0 // indirect

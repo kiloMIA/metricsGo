@@ -1,7 +1,9 @@
-package main
+package tests
 
 import (
 	"errors"
+	"github.com/kiloMIA/metricsGo/server/api"
+	"net/http"
 	"net/http/httptest"
 	"testing"
 )
@@ -30,4 +32,8 @@ func TestErrorResponse(t *testing.T) {
 			t.Errorf("errorResponse returned status code %d, expected %d", res.Code, test.expected)
 		}
 	}
+}
+
+func errorResponse(s string, i int, res *httptest.ResponseRecorder, req *http.Request, err error) {
+	panic("unimplemented")
 }

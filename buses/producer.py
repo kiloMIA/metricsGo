@@ -1,6 +1,6 @@
 import pika
 import json
-from buses_pb2 import BusResponse
+
 
 
 def send_bus_response(bus_response):
