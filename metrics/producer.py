@@ -4,7 +4,7 @@ import pika
 
 
 def send_to_queue(data, queue_name):
-    connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host='rabbitmq'))
     channel = connection.channel()
     channel.queue_declare(queue=queue_name)
 
